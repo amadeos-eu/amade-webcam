@@ -12,6 +12,7 @@ import java.awt.image.DataBufferByte;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -78,8 +79,9 @@ public class FfmpegCamera implements FrameSource {
         }
         process.getOutputStream().close();
         ByteArrayOutputStream errors = new ByteArrayOutputStream();
-        Thread.ofVirtual().name("ffmpeg-errors").start(() -> keepTail(process.getErrorStream(), errors));
-        Reader reader = new Reader(process, mode, listener, errors);
+        Thread errorReader = Thread.ofVirtual().name("ffmpeg-errors")
+                .start(() -> keepTail(process.getErrorStream(), errors));
+        Reader reader = new Reader(process, mode, listener, errors, errorReader);
         Thread.ofPlatform().daemon().name("camera-frames").start(reader);
         return reader::stop;
     }
@@ -90,13 +92,15 @@ public class FfmpegCamera implements FrameSource {
         private final VideoMode mode;
         private final Listener listener;
         private final ByteArrayOutputStream errors;
+        private final Thread errorReader;
         private volatile boolean stopped;
 
-        Reader(Process process, VideoMode mode, Listener listener, ByteArrayOutputStream errors) {
+        Reader(Process process, VideoMode mode, Listener listener, ByteArrayOutputStream errors, Thread errorReader) {
             this.process = process;
             this.mode = mode;
             this.listener = listener;
             this.errors = errors;
+            this.errorReader = errorReader;
         }
 
         @Override
@@ -126,6 +130,8 @@ public class FfmpegCamera implements FrameSource {
         private void finish() {
             try {
                 if (!process.waitFor(3, TimeUnit.SECONDS)) process.destroyForcibly();
+                // The picture can end before ffmpeg's last message is read; that message says why.
+                errorReader.join(Duration.ofSeconds(2));
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 process.destroyForcibly();
