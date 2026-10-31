@@ -67,6 +67,13 @@ public interface MainView {
 
     void showError(String message);
 
+    /**
+     * A photo, a burst or a video is saved. If the window is in the background (a self-timer, a burst or a
+     * time lapse runs while the user does something else), a desktop notification says so; {@code open} opens
+     * the file.
+     */
+    void announceSaved(String text, Runnable open);
+
     void showAbout();
 
     void close();

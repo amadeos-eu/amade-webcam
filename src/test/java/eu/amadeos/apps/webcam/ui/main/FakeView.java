@@ -39,6 +39,8 @@ final class FakeView implements MainView {
     final List<String> errors = new ArrayList<>();
     int abouts;
     boolean closed;
+    final List<String> announced = new ArrayList<>();
+    Runnable openAnnounced;
 
     @Override
     public void showFrame(BufferedImage f) {
@@ -147,5 +149,11 @@ final class FakeView implements MainView {
     @Override
     public void close() {
         closed = true;
+    }
+
+    @Override
+    public void announceSaved(String text, Runnable open) {
+        announced.add(text);
+        openAnnounced = open;
     }
 }

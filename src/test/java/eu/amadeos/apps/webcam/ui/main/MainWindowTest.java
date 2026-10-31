@@ -79,6 +79,21 @@ class MainWindowTest {
     }
 
     @Test
+    void theSavedNotificationIsTransientAndOpensOnTheEdt() throws Exception {
+        var onEdt = new java.util.concurrent.atomic.AtomicBoolean();
+        var n = MainWindow.saved(new Fixture(dir).msg, "Saved Photo <1>.jpg", null,
+                () -> onEdt.set(SwingUtilities.isEventDispatchThread()), () -> { });
+        assertEquals("Saved Photo &lt;1&gt;.jpg", n.body());
+        assertTrue(n.isTransient());
+        assertEquals("open", n.actions().getFirst().id());
+        Thread t = new Thread(n.actions().getFirst().run());
+        t.start();
+        t.join();
+        SwingUtilities.invokeAndWait(() -> { });
+        assertTrue(onEdt.get());
+    }
+
+    @Test
     void framesAppearInThePreview() throws Exception {
         open();
         OnEdt.run(() -> {

@@ -9,6 +9,8 @@ import eu.amadeos.apps.webcam.domain.QrContent;
 import eu.amadeos.apps.webcam.domain.Shots;
 import eu.amadeos.apps.webcam.domain.VideoSpeed;
 import eu.amadeos.apps.webcam.ui.settings.SettingsDialog;
+import eu.amadeos.commons.desktop.Notification;
+import eu.amadeos.commons.desktop.Notifications;
 import eu.amadeos.commons.i18n.LocaleSettings;
 import eu.amadeos.commons.i18n.Messages;
 import eu.amadeos.commons.i18n.Mnemonics;
@@ -31,10 +33,12 @@ import javax.swing.JRootPane;
 import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Frame;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
@@ -461,6 +465,30 @@ public final class MainWindow extends JFrame implements MainView {
                 msg.get("dialog.delete.title"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null,
                 options, options[1]) == 0;
     }
+
+    // --8<-- [start:saved]
+    @Override
+    public void announceSaved(String text, Runnable open) {
+        // In front, the status line is enough.
+        if (isActive()) return;
+        Notifications.send(saved(msg, text, getIconImage(), open, () -> {
+            if (getState() == Frame.ICONIFIED) setState(Frame.NORMAL);
+            toFront();
+        }));
+    }
+
+    /** The notification of {@link #announceSaved}: transient, Open opens the file, a click shows the window. */
+    static Notification saved(Messages msg, String text, java.awt.Image icon, Runnable open, Runnable show) {
+        return Notification.of(msg.get("window.title"))
+                .body(Notification.escape(text))
+                .icon(icon)
+                .category("transfer.complete")
+                .urgency(Notification.Urgency.LOW)
+                .transientOnly()
+                .action("open", msg.get("qr.open"), () -> SwingUtilities.invokeLater(open))
+                .defaultAction(() -> SwingUtilities.invokeLater(show));
+    }
+    // --8<-- [end:saved]
 
     @Override
     public void showError(String message) {
