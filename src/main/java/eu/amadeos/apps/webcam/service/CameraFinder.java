@@ -63,6 +63,7 @@ public class CameraFinder {
         return nodes;
     }
 
+    // --8<-- [start:cameras]
     /** The nodes that deliver pictures. */
     public List<CameraDevice> cameras() {
         List<CameraDevice> nodes = nodes();
@@ -74,6 +75,7 @@ public class CameraFinder {
         }
         return cameras;
     }
+    // --8<-- [end:cameras]
 
     /** What the camera can deliver; empty for a node without pictures or when v4l2-ctl is missing. */
     public List<VideoMode> formats(CameraDevice camera) {

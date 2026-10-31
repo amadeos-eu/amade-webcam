@@ -143,6 +143,7 @@ public class Recorder {
          * Hands a frame to the encoder; called for every camera frame. A time lapse keeps only one frame every
          * few seconds. Returns true if the frame was kept.
          */
+        // --8<-- [start:offer]
         public boolean offer(BufferedImage frame) {
             if (stopping) return false;
             if (settings.speed().isTimeLapse()) {
@@ -162,6 +163,7 @@ public class Recorder {
                 return false;
             }
         }
+        // --8<-- [end:offer]
 
         /** Milliseconds since the start. */
         public long elapsed() {

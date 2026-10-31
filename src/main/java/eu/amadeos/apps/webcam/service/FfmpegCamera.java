@@ -142,6 +142,7 @@ public class FfmpegCamera implements FrameSource {
         }
     }
 
+    // --8<-- [start:classify]
     /** What ffmpeg's message means for the user. */
     public static Failure classify(String message) {
         String m = message.toLowerCase(Locale.ROOT);
@@ -152,6 +153,7 @@ public class FfmpegCamera implements FrameSource {
         }
         return Failure.OTHER;
     }
+    // --8<-- [end:classify]
 
     static String lastLine(String text) {
         String[] lines = text.strip().split("\\R");

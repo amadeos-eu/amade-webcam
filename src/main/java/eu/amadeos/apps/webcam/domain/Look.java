@@ -11,6 +11,7 @@ import java.awt.image.DataBufferByte;
 public enum Look {
     NORMAL, BLACK_AND_WHITE, SEPIA, WARM, COOL;
 
+    // --8<-- [start:apply]
     /** Changes the picture in place; {@link #NORMAL} leaves it as it is. */
     public void apply(BufferedImage frame) {
         if (this == NORMAL) return;
@@ -47,6 +48,7 @@ public enum Look {
             px[i + 2] = (byte) clamp(nr);
         }
     }
+    // --8<-- [end:apply]
 
     private static int clamp(int v) {
         return v < 0 ? 0 : Math.min(v, 255);

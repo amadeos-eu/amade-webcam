@@ -137,6 +137,7 @@ public final class MainPresenter implements FrameSource.Listener {
         });
     }
 
+    // --8<-- [start:plug]
     /** Runs on the ticker thread: a cheap look at the nodes, the expensive search only when they changed. */
     void checkPlugged() {
         List<CameraDevice> now = s.finder().nodes();
@@ -149,6 +150,7 @@ public final class MainPresenter implements FrameSource.Listener {
             });
         });
     }
+    // --8<-- [end:plug]
 
     private void camerasFound(List<CameraDevice> found) {
         cameras = List.copyOf(found);

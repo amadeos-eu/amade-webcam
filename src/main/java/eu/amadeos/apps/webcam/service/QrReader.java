@@ -29,6 +29,7 @@ public class QrReader {
 
     private final QRCodeReader reader = new QRCodeReader();
 
+    // --8<-- [start:read]
     /** The text of the code in the frame, empty if there is none (or it cannot be read). */
     public Optional<String> read(BufferedImage frame) {
         int step = Math.max(1, (frame.getWidth() + MAX_WIDTH - 1) / MAX_WIDTH);
@@ -45,6 +46,7 @@ public class QrReader {
             reader.reset();
         }
     }
+    // --8<-- [end:read]
 
     private static byte[] grey(BufferedImage frame, int step, int w, int h) {
         byte[] grey = new byte[w * h];
