@@ -1,0 +1,160 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'eu.amadeos'
+// CI computes the version from the Conventional Commits since the last release tag and passes it as
+// -PappVersion (amadeos-eu/amadeos-ci scripts/next-version.sh); a build without it is a local development build.
+version = findProperty('appVersion') ?: '0.0.0-dev.0'
+// Debian sorts 1.1.0~dev.57 before 1.1.0 (with - it would sort after it).
+def debVersion = version.toString().replace('-', '~')
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+application {
+    mainClass = 'eu.amadeos.apps.webcam.bootstrap.AmadeWebcamApplication'
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    // Theme, Motif look, start-up, XDG folders and the program runner shared by all amadeOS applications.
+    // With ../amade-commons checked out, settings.gradle builds that checkout instead (composite build).
+    implementation 'com.github.amadeos-eu:amade-commons:b3741898d4'
+    // Reads QR codes in the camera picture (pure Java, no native parts).
+    implementation 'com.google.zxing:core:3.5.3'
+    runtimeOnly 'ch.qos.logback:logback-classic:1.5.18'
+    testImplementation platform('org.junit:junit-bom:5.10.2')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+    // Tests compare English texts, whatever the language of the build machine.
+    systemProperty 'user.language', 'en'
+    systemProperty 'user.country', 'US'
+}
+
+jar {
+    archiveBaseName = 'amade-webcam'
+    manifest {
+        attributes(
+            'Main-Class': 'eu.amadeos.apps.webcam.bootstrap.AmadeWebcamApplication',
+            'Implementation-Title': 'amade-webcam',
+            'Implementation-Version': project.version
+        )
+    }
+    from({
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    })
+    // Signed dependency jars would otherwise invalidate the fat jar.
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.register('deb') {
+    dependsOn jar
+    description = 'Builds a standard Debian (.deb) package for amade-webcam'
+    group = 'distribution'
+
+    doLast {
+        def buildDirFile = layout.buildDirectory.get().asFile
+        def stagingDir = new File(buildDirFile, 'deb-staging')
+        delete(stagingDir)
+
+        def optDir = new File(stagingDir, 'opt/amade-webcam')
+        def binDir = new File(stagingDir, 'usr/bin')
+        def appDir = new File(stagingDir, 'usr/share/applications')
+        def iconDir = new File(stagingDir, 'usr/share/icons/hicolor/48x48/apps')
+        def docDir = new File(stagingDir, 'usr/share/doc/amade-webcam')
+        def debianDir = new File(stagingDir, 'DEBIAN')
+        def distDir = new File(buildDirFile, 'distributions')
+        [optDir, binDir, appDir, iconDir, docDir, debianDir, distDir]*.mkdirs()
+
+        copy {
+            from jar.archiveFile
+            into optDir
+            rename { 'amade-webcam.jar' }
+        }
+
+        def launcher = new File(binDir, 'amade-webcam')
+        launcher.text = """#!/bin/sh
+exec /usr/bin/java -jar /opt/amade-webcam/amade-webcam.jar "\$@"
+"""
+        launcher.setExecutable(true, false)
+
+        copy {
+            from 'packaging/amade-webcam.desktop'
+            into appDir
+        }
+        // AppStream metadata: name, description and screenshot for amadeOS Software (and a repository's
+        // appstream-generator).
+        copy {
+            from 'packaging/eu.amadeos.apps.webcam.metainfo.xml'
+            into new File(stagingDir, "usr/share/metainfo")
+        }
+        copy {
+            from 'src/main/resources/icons/amade-webcam.png'
+            into iconDir
+        }
+        copy {
+            from 'LICENSE'
+            into docDir
+            rename { 'copyright' }
+        }
+
+        new File(debianDir, 'control').text = """Package: amade-webcam
+Version: ${debVersion}
+Section: video
+Priority: optional
+Architecture: all
+Depends: openjdk-25-jre | java-runtime (>= 25), ffmpeg, v4l-utils
+Recommends: pulseaudio-utils
+Maintainer: amadeOS Project <developers@datazuul.com>
+Description: Webcam for amadeOS
+ Shows the picture of a webcam or another V4L2 camera, takes photos (with
+ timer, burst and looks such as black and white or sepia) and records
+ videos with sound as MP4 or WebM, also as time lapse. Reads QR codes held
+ up to the camera. The camera's own controls (brightness, white balance,
+ exposure) are set per camera. Cameras that are plugged in show up at once.
+ Part of the amadeOS desktop.
+"""
+
+        def debFile = new File(distDir, "amade-webcam_${debVersion}_all.deb")
+        def process = new ProcessBuilder('dpkg-deb', '--root-owner-group', '--build',
+                stagingDir.absolutePath, debFile.absolutePath)
+                .redirectErrorStream(true)
+                .start()
+        process.inputStream.eachLine { println it }
+        if (process.waitFor() != 0) {
+            throw new GradleException('dpkg-deb failed')
+        }
+        println "[deb] Created ${debFile.absolutePath}"
+    }
+}
+
+tasks.register('installToAmadeOs') {
+    dependsOn 'deb'
+    description = 'Builds and drops the .deb package into ../amadeos/config/packages.chroot/'
+    group = 'distribution'
+
+    doLast {
+        def targetDir = file('../amadeos/config/packages.chroot')
+        targetDir.mkdirs()
+        def debFile = new File(layout.buildDirectory.get().asFile, "distributions/amade-webcam_${debVersion}_all.deb")
+        copy {
+            from debFile
+            into targetDir
+        }
+        println "[installToAmadeOs] Copied ${debFile.name} to ${targetDir.absolutePath}"
+    }
+}

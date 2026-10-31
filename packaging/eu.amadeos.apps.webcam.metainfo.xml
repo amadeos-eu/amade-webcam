@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- AppStream metadata of amade-webcam, installed as /usr/share/metainfo/eu.amadeos.apps.webcam.metainfo.xml.
+     amadeOS Software shows it for the installed package; a repository's appstream-generator reads it too. -->
+<component type="desktop-application">
+  <id>eu.amadeos.apps.webcam</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>EUPL-1.2</project_license>
+
+  <name>amadeOS Webcam</name>
+  <name xml:lang="de">amadeOS Webcam</name>
+  <name xml:lang="fr">amadeOS Webcam</name>
+  <name xml:lang="es">amadeOS Cámara web</name>
+  <name xml:lang="it">amadeOS Webcam</name>
+
+  <summary>Take photos and record videos with your webcam</summary>
+  <summary xml:lang="de">Fotos und Videos mit der Webcam aufnehmen</summary>
+  <summary xml:lang="fr">Prendre des photos et filmer avec votre webcam</summary>
+  <summary xml:lang="es">Hacer fotos y grabar vídeos con la cámara web</summary>
+  <summary xml:lang="it">Scattare foto e registrare video con la webcam</summary>
+
+  <description>
+    <p>amade-webcam is the camera program of the amadeOS desktop. It shows the picture of a webcam, a laptop camera or any other V4L2 camera, takes photos and records videos with sound.</p>
+    <p xml:lang="de">amade-webcam ist das Kameraprogramm des amadeOS-Desktops. Es zeigt das Bild einer Webcam, einer Laptop-Kamera oder einer anderen V4L2-Kamera, nimmt Fotos auf und zeichnet Videos mit Ton auf.</p>
+    <p xml:lang="fr">amade-webcam est le programme de caméra du bureau amadeOS. Il affiche l'image d'une webcam, de la caméra d'un portable ou de toute autre caméra V4L2, prend des photos et enregistre des vidéos avec le son.</p>
+    <p xml:lang="es">amade-webcam es el programa de cámara del escritorio amadeOS. Muestra la imagen de una cámara web, de la cámara de un portátil o de cualquier otra cámara V4L2, hace fotos y graba vídeos con sonido.</p>
+    <p xml:lang="it">amade-webcam è il programma della fotocamera del desktop amadeOS. Mostra l'immagine di una webcam, della fotocamera di un portatile o di qualsiasi altra fotocamera V4L2, scatta foto e registra video con l'audio.</p>
+    <ul>
+      <li>Photos with timer, bursts of 5 or 10 and looks such as black and white or sepia</li>
+      <li xml:lang="de">Fotos mit Timer, Serien von 5 oder 10 Bildern und Looks wie Schwarzweiß oder Sepia</li>
+      <li xml:lang="fr">Photos avec retardateur, rafales de 5 ou 10 et styles comme noir et blanc ou sépia</li>
+      <li xml:lang="es">Fotos con temporizador, ráfagas de 5 o 10 y estilos como blanco y negro o sepia</li>
+      <li xml:lang="it">Foto con autoscatto, raffiche di 5 o 10 e stili come bianco e nero o seppia</li>
+      <li>Videos with sound as MP4 (plays everywhere) or WebM, also as time lapse</li>
+      <li xml:lang="de">Videos mit Ton als MP4 (läuft überall) oder WebM, auch als Zeitraffer</li>
+      <li xml:lang="fr">Vidéos avec le son en MP4 (lu partout) ou WebM, aussi en accéléré</li>
+      <li xml:lang="es">Vídeos con sonido en MP4 (se reproduce en todas partes) o WebM, también en time-lapse</li>
+      <li xml:lang="it">Video con audio in MP4 (si riproduce ovunque) o WebM, anche in time-lapse</li>
+      <li>Reads QR codes held up to the camera: links, WLAN logins, text</li>
+      <li xml:lang="de">Liest QR-Codes, die in die Kamera gehalten werden: Links, WLAN-Zugänge, Text</li>
+      <li xml:lang="fr">Lit les codes QR présentés à la caméra : liens, accès Wi-Fi, texte</li>
+      <li xml:lang="es">Lee códigos QR que se muestran a la cámara: enlaces, accesos Wi-Fi, texto</li>
+      <li xml:lang="it">Legge i codici QR mostrati alla fotocamera: link, accessi Wi-Fi, testo</li>
+      <li>The camera's own controls (brightness, white balance, exposure) are kept per camera; cameras that are plugged in show up at once</li>
+      <li xml:lang="de">Die Regler der Kamera (Helligkeit, Weißabgleich, Belichtung) werden pro Kamera gemerkt; angeschlossene Kameras erscheinen sofort</li>
+      <li xml:lang="fr">Les réglages propres de la caméra (luminosité, balance des blancs, exposition) sont gardés par caméra ; une caméra branchée apparaît aussitôt</li>
+      <li xml:lang="es">Los controles propios de la cámara (brillo, balance de blancos, exposición) se guardan por cámara; una cámara conectada aparece enseguida</li>
+      <li xml:lang="it">I controlli propri della fotocamera (luminosità, bilanciamento del bianco, esposizione) vengono ricordati per fotocamera; una fotocamera collegata appare subito</li>
+    </ul>
+  </description>
+
+  <launchable type="desktop-id">amade-webcam.desktop</launchable>
+  <icon type="stock">amade-webcam</icon>
+  <categories>
+    <category>AudioVideo</category>
+    <category>Video</category>
+    <category>Recorder</category>
+  </categories>
+
+  <url type="homepage">https://github.com/amadeos-eu/amade-webcam</url>
+  <url type="bugtracker">https://github.com/amadeos-eu/amade-webcam/issues</url>
+  <developer id="eu.amadeos">
+    <name>amadeOS Project</name>
+  </developer>
+
+  <screenshots>
+    <screenshot type="default">
+      <caption>The camera picture with the strip of recent photos</caption>
+      <caption xml:lang="de">Das Kamerabild mit der Leiste der letzten Fotos</caption>
+      <caption xml:lang="fr">L'image de la caméra avec la bande des dernières photos</caption>
+      <caption xml:lang="es">La imagen de la cámara con la tira de las últimas fotos</caption>
+      <caption xml:lang="it">L'immagine della fotocamera con la striscia delle ultime foto</caption>
+      <image>https://raw.githubusercontent.com/amadeos-eu/amade-webcam/main/docs/screenshots/amade-webcam.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Camera settings with the camera's own controls</caption>
+      <caption xml:lang="de">Kameraeinstellungen mit den Reglern der Kamera</caption>
+      <caption xml:lang="fr">Réglages de la caméra avec ses propres réglages</caption>
+      <caption xml:lang="es">Ajustes de la cámara con sus propios controles</caption>
+      <caption xml:lang="it">Impostazioni della fotocamera con i suoi controlli</caption>
+      <image>https://raw.githubusercontent.com/amadeos-eu/amade-webcam/main/docs/screenshots/amade-webcam-settings.png</image>
+    </screenshot>
+  </screenshots>
+
+  <provides>
+    <binary>amade-webcam</binary>
+  </provides>
+  <content_rating type="oars-1.1"/>
+</component>

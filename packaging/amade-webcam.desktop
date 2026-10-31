@@ -1,0 +1,24 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=amadeOS Webcam
+Name[de]=amadeOS Webcam
+Name[fr]=amadeOS Webcam
+Name[es]=amadeOS Webcam
+Name[it]=amadeOS Webcam
+GenericName=Webcam
+GenericName[de]=Webcam
+GenericName[fr]=Webcam
+GenericName[es]=Cámara web
+GenericName[it]=Webcam
+Comment=Take photos and record videos with your webcam
+Comment[de]=Fotos und Videos mit der Webcam aufnehmen
+Comment[fr]=Prendre des photos et filmer avec votre webcam
+Comment[es]=Hacer fotos y grabar vídeos con la cámara web
+Comment[it]=Scattare foto e registrare video con la webcam
+Icon=amade-webcam
+Exec=/usr/bin/amade-webcam
+Terminal=false
+Categories=AudioVideo;Video;Recorder;Photography;
+Keywords=webcam;camera;photo;video;record;selfie;QR;time lapse;Kamera;Foto;Aufnahme;Zeitraffer;
+StartupNotify=true
