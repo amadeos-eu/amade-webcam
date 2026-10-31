@@ -13,6 +13,7 @@
 - **Photos** with the round shutter button, Space or Enter: a short flash and a shutter click (both can be switched off), saved as JPEG or PNG in `~/Pictures/Camera` with names like `Photo 2026-10-31 14-05-12.jpg`.
 - **Self-timer** of 3 or 10 seconds with a large countdown, and **bursts** of 3 or 5 photos a quarter of a second apart.
 - **Videos** with sound from the chosen microphone and a level meter. MP4 (H.264 and AAC, plays on every computer, phone and TV) by default, WebM (VP9 and Opus) in the settings. Saved in `~/Videos/Camera`.
+- **A notification** when a photo, a burst or a video is saved while the window is in the background (self-timer, time lapse); *Open* opens the file.
 - **Time lapse**: one picture every 1, 5, 10 or 30 seconds, played back at the normal frame rate.
 - **Looks**: Normal, Black and White, Sepia, Warm and Cool, live in the picture and in what is saved.
 - **QR codes**: with *QR* switched on, a code in front of the camera shows a bar with its content and a fitting button: open a link, write a mail, copy a Wi-Fi password, copy text.

@@ -417,9 +417,11 @@ public final class MainPresenter implements FrameSource.Listener {
     private void photosSaved(List<Path> files) {
         shooting = false;
         if (files.isEmpty()) return;
-        view.showStatus(files.size() == 1
+        String text = files.size() == 1
                 ? msg.format("status.photo-saved", files.getFirst().getFileName())
-                : msg.format("status.burst-saved", files.size(), files.getFirst().getParent()));
+                : msg.format("status.burst-saved", files.size(), files.getFirst().getParent());
+        view.showStatus(text);
+        view.announceSaved(text, () -> openRecent(files.getLast()));
         refreshRecent();
     }
 
@@ -491,7 +493,9 @@ public final class MainPresenter implements FrameSource.Listener {
                 view.showError(msg.format("error.record", rootMessage(error)));
                 view.showStatus(statusText());
             } else {
-                view.showStatus(msg.format("status.video-saved", file.getFileName()));
+                String text = msg.format("status.video-saved", file.getFileName());
+                view.showStatus(text);
+                view.announceSaved(text, () -> openRecent(file));
                 refreshRecent();
             }
         }));

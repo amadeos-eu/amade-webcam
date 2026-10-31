@@ -262,6 +262,19 @@ class MainPresenterTest {
         assertEquals(3, f.view.recent.size());
     }
 
+    @Test
+    void aSavedBurstIsAnnouncedAndItsOpenOpensTheLastPhoto() throws Exception {
+        Fixture f = started();
+        f.presenter.setShots(Shots.BURST_5);
+        f.source.send(Fixture.frame());
+        f.presenter.takePhoto();
+        f.ticker.advance(Duration.ofSeconds(2));
+        assertEquals(List.of(f.view.status), f.view.announced);
+        f.view.openAnnounced.run();
+        assertEquals(List.of("open " + home.resolve("Pictures/Camera/Photo 2026-10-31 12-00-00 (5).jpg")),
+                f.opener.opened);
+    }
+
     // ---------------------------------------------------------------- video
 
     @Test
